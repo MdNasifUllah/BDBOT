@@ -1,0 +1,71 @@
+.u-section-1 .u-sheet-1 {
+  min-height: 100vh;
+}
+
+.u-section-1 .u-image-1 {
+  width: 225px;
+  height: 225px;
+  background-image: url("images/ei_1670237134925-removebg-preview-1.png");
+  background-position: 50% 50%;
+  margin: 37px auto 0;
+}
+
+.u-section-1 .u-image-2 {
+  width: 490px;
+  height: 118px;
+  margin: 28px auto 0;
+}
+
+.u-section-1 .u-text-1 {
+  font-size: 4.5rem;
+  font-weight: 700;
+  margin: -98px auto 0;
+}
+
+.u-section-1 .u-text-2 {
+  text-transform: uppercase;
+  font-weight: 700;
+  text-decoration: underline !important;
+  margin: 48px auto 0;
+}
+
+.u-section-1 .u-form-1 {
+  height: 88px;
+  background-image: none;
+  width: 798px;
+  margin: 48px auto 60px;
+}
+
+.u-section-1 .u-btn-1 {
+  background-image: none;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+@media (max-width: 991px) {
+  .u-section-1 .u-form-1 {
+    width: 720px;
+  }
+}
+
+@media (max-width: 767px) {
+  .u-section-1 .u-form-1 {
+    width: 540px;
+  }
+}
+
+@media (max-width: 575px) {
+  .u-section-1 .u-image-2 {
+    width: 340px;
+    height: 82px;
+  }
+
+  .u-section-1 .u-text-1 {
+    font-size: 1.875rem;
+    margin-top: -62px;
+  }
+
+  .u-section-1 .u-form-1 {
+    width: 340px;
+  }
+}
