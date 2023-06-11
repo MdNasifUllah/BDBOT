@@ -23,9 +23,9 @@ $(function () {
             });
         });
 
-    var publishable_key = "rf_16X4Lb0d1L9EKHUZcxmt";
+    var publishable_key = "rf_nYuk7RGcI9bojsd8wbQHZN4OjOC3";
     var toLoad = {
-        model: "bdbot-ultimate-qd7cy",
+        model: "bdbot_launch_new",
         version: 1
     };
 
@@ -143,6 +143,12 @@ $(function () {
                 textWidth + 8,
                 textHeight + 4
             );
+
+             // ZZZZZZZZAAAAAAZZZZZZZ Display pop-up message when object is detected
+             if (prediction.class === "PRAC-GRENADE-DUMMY") {
+                alert("THE GRENADE HAS BEEN FOUND"); // Display a pop-up message
+                document.getElementById("toggleSwitch").disabled = false; // Enable the button
+            }
         });
 
         predictions.forEach(function (prediction) {

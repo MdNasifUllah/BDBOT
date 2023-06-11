@@ -1,30 +1,110 @@
 <!DOCTYPE html>
-<html style="font-size: 16px;" lang="en"><head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8">
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <title>GRAPH</title>
-    <link rel="stylesheet" href="nicepage.css" media="screen">
-<link rel="stylesheet" href="GRAPH.css" media="screen">
-    <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
-    <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
-    <meta name="generator" content="Nicepage 5.1.5, nicepage.com">
-    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
-    
-    
-    <script type="application/ld+json">{
-		"@context": "http://schema.org",
-		"@type": "Organization",
-		"name": ""
-}</script>
-    <meta name="theme-color" content="#478ac9">
-    <meta property="og:title" content="GRAPH">
-    <meta property="og:type" content="website">
-  </head>
-  <body class="u-body u-xl-mode" data-lang="en" style="background-color: transparent;">
-    <section class="u-clearfix u-container-align-center u-image u-section-1" id="sec-f24d" data-image-width="1000" data-image-height="1000">
-      <div class="u-clearfix u-sheet u-sheet-1"></div>
-    </section>
+<html>
+<head>
+  <title>BDBOT RECORD GRAPH</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    canvas {
+      max-width: 600px;
+      margin: 0 auto;
+      width: 800px;
+      height: 400px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="recordsChart"></canvas>
 
-</body></html>
+  <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-database.js"></script>
+
+  <script>
+    var firebaseConfig = {
+      //Firebase configuration here
+        apiKey: "AIzaSyAayMyBCgF6vj_sXhpAB1ViLuxvVFF3CN4",
+        authDomain: "timer-project-307c6.firebaseapp.com",
+        databaseURL: "https://timer-project-307c6-default-rtdb.firebaseio.com/",
+        projectId: "timer-project-307c6",
+        storageBucket: "timer-project-307c6.appspot.com",
+        messagingSenderId: "874966284571",
+        appId: "1:874966284571:web:470acadfc5545525513bbe",
+        //measurementId: "G-KRBCV2K4CX"       
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    var database = firebase.database();
+
+    var checkboxRecords = {};
+    var totalRecords = {};
+
+    database.ref("entries").on("value", function(snapshot) {
+      checkboxRecords = {};
+      totalRecords = {};
+
+      snapshot.forEach(function(childSnapshot) {
+        var entry = childSnapshot.val();
+
+        var entryDate = new Date(entry.startTime).toLocaleDateString();
+        if (checkboxRecords.hasOwnProperty(entryDate)) {
+          checkboxRecords[entryDate] += entry.isCheckboxChecked ? 1 : 0;
+          totalRecords[entryDate]++;
+        } else {
+          checkboxRecords[entryDate] = entry.isCheckboxChecked ? 1 : 0;
+          totalRecords[entryDate] = 1;
+        }
+      });
+
+      updateChart();
+    });
+
+    function updateChart() {
+      var ctx = document.getElementById("recordsChart").getContext("2d");
+
+      var labels = Object.keys(checkboxRecords);
+      var checkboxData = Object.values(checkboxRecords);
+      var totalData = Object.values(totalRecords);
+
+      var chartData = {
+        labels: labels,
+        datasets: [{
+          label: "GRENADES DETECTED",
+          data: checkboxData,
+          backgroundColor: "rgba(54, 162, 235, 0.5)",
+          borderColor: "rgba(54, 162, 235, 1)",
+          borderWidth: 1
+        }, {
+          label: "TOTAL NUMBER OF RUNS",
+          data: totalData,
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+          borderColor: "rgba(255, 99, 132, 1)",
+          borderWidth: 1
+        }]
+      };
+
+      var options = {
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: "Date"
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: "COUNT"
+            },
+            beginAtZero: true
+          }
+        }
+      };
+
+      new Chart(ctx, {
+        type: "bar",
+        data: chartData,
+        options: options
+      });
+    }
+  </script>
+</body>
+</html>

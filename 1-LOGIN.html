@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html style="font-size: 16px;" lang="en"><head>
+<html style="font-size: 16px;" lang="en">
+<head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <meta name="keywords" content="BDBOT">
@@ -8,23 +9,108 @@
     <script src="js/bootstrap.min.js"></script>
     <title>1 LOGIN</title>
     <link rel="stylesheet" href="nicepage.css" media="screen">
-<link rel="stylesheet" href="1-LOGIN.css" media="screen">
+    <link rel="stylesheet" href="1-LOGIN.css" media="screen">
     <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
     <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
     <meta name="generator" content="Nicepage 5.0.7, nicepage.com">
     <meta name="referrer" content="origin">
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
     
-    
     <script type="application/ld+json">{
-		"@context": "http://schema.org",
-		"@type": "Organization",
-		"name": "BDBOT IDP"
-}</script>
+      "@context": "http://schema.org",
+      "@type": "Organization",
+      "name": "BDBOT IDP"
+    }</script>
     <meta name="theme-color" content="#478ac9">
     <meta property="og:title" content="1 LOGIN">
     <meta property="og:type" content="website">
-  </head>
+
+
+  <!-- Add the Firebase JavaScript SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-firestore.js"></script>
+  
+  <script>
+    // Initialize Firebase
+    var firebaseConfig = {
+		apiKey: "AIzaSyD9qmvfiKcKXSoRbSw4CXOL7-5ntVzdHWs",
+		authDomain: "idpbdbot.firebaseapp.com",
+		projectId: "idpbdbot",
+		storageBucket: "idpbdbot.appspot.com",
+		messagingSenderId: "88426500353",
+		appId: "1:88426500353:web:cf6ccb393343c9cc5a8b00",
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    
+    // Register a new user
+    function registerUser() {
+      var email = document.getElementById("email").value;
+      var password = document.getElementById("password").value;
+      
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+      .then(function(userCredential) {
+        // Registration successful
+        var user = userCredential.user;
+        console.log("Registration successful: ", user);
+        alert("Registration successful!");
+      })
+      .catch(function(error) {
+        // Registration failed
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.error("Registration error: ", errorCode, errorMessage);
+        alert("Registration failed: " + errorMessage);
+      });
+    }
+    
+    // Login with existing user
+    function loginUser() {
+      var email = document.getElementById("email").value;
+      var password = document.getElementById("password").value;
+      
+      firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(function(userCredential) {
+        // Login successful
+        var user = userCredential.user;
+        console.log("Login successful: ", user);
+        alert("Login successful!");
+
+		// Redirect to next page
+        window.location.href = "3-MENU.html";
+
+      })
+      .catch(function(error) {
+        // Login failed
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.error("Login error: ", errorCode, errorMessage);
+        alert("Login failed: " + errorMessage);
+      });
+    }
+
+      // Reset password
+  function resetPassword() {
+    var email = document.getElementById("email").value;
+    
+    firebase.auth().sendPasswordResetEmail(email)
+      .then(function() {
+        // Password reset email sent successfully
+        console.log("Password reset email sent successfully");
+        alert("Password reset email sent. Please check your email.");
+      })
+      .catch(function(error) {
+        // Password reset email failed to send
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.error("Password reset error: ", errorCode, errorMessage);
+        alert("Password reset failed: " + errorMessage);
+      });
+  }
+  </script>
+
+</head>
   <body class="u-body u-xl-mode" data-lang="en">
     <section class="u-clearfix u-uploaded-video u-video u-video-contain u-section-1" id="sec-7126">
       <div class="u-background-video u-expanded" style="">
@@ -40,26 +126,27 @@
         <img class="infinite u-image u-image-round u-radius-25 u-image-2" src="images/images79.jpeg" alt="" data-image-width="701" data-image-height="438" data-animation-name="pulse" data-animation-duration="1000" data-animation-direction="">
         <h1 class="infinite u-align-center u-text u-text-default u-text-palette-2-base u-text-1" data-animation-name="pulse" data-animation-duration="1000" data-animation-direction="">BDBOT</h1>
         <h1 class="u-align-center u-text u-text-default u-text-white u-text-2">WELCOME</h1>
-        <div class="u-border-2 u-border-grey-80 u-form u-palette-1-dark-1 u-radius-25 u-form-1">
-          <form action="#" class="u-clearfix u-form-horizontal u-form-spacing-11 u-inner-form" style="padding: 15px;" source="email">
-            <div class="u-form-group u-label-none">
-              <label for="email-ef64" class="u-label">PW</label>
-              <input type="text" placeholder="PASSWORD" id="email-ef64" name="PASSWORD" class="u-border-1 u-border-grey-30 u-input u-input-rectangle" required="required">
+
+
+
+
+            <div class="u-border-2 u-border-grey-80 u-form u-palette-1-dark-1 u-radius-25 u-form-1">
+              <form action="#" class="u-clearfix u-form-horizontal u-form-spacing-11 u-inner-form" style="padding: 15px;" source="email">
+                
+                <div class="u-form-group u-label-none">
+                  <input type="email" placeholder="Registered e-mail" id="email" name="email" class="u-border-1 u-border-grey-30 u-input u-input-rectangle" required><br><br>
+                </div>
+                
+                <div class="u-form-group u-label-none">
+                  <input type="password" placeholder="PASSWORD-min 6 char" id="password" name="password" class="u-border-1 u-border-grey-30 u-input u-input-rectangle" required><br><br>
+                </div>
+
+              <!-- <input type="button" value="Register" class="u-active-palette-2-base u-border-none u-btn u-btn-round u-btn-submit u-button-style u-hover-palette-1-dark-1 u-palette-4-dark-1 u-radius-25 u-btn-1" onclick="registerUser()">-->
+                <input type="button" value="Login" class="u-active-palette-2-base u-border-none u-btn u-btn-round u-btn-submit u-button-style u-hover-palette-1-dark-1 u-palette-4-dark-1 u-radius-25 u-btn-1"onclick="loginUser()">
+                <input type="button" value="Reset Password" class="u-active-palette-2-base u-border-none u-btn u-btn-round u-btn-submit u-button-style u-hover-palette-1-dark-1 u-palette-4-dark-1 u-radius-25 u-btn-1"onclick="resetPassword()">
+
+              </form>
             </div>
-            <div class="u-form-group u-label-none">
-              <label for="name-ef64" class="u-label">DEVICE ID</label>
-              <input type="text" placeholder="DEVICE ID" id="name-ef64" name="ID" class="u-border-1 u-border-grey-30 u-input u-input-rectangle" required="required">
-            </div>
-            <div class="u-form-group u-form-submit u-label-none">
-              <a href="2-PAIR.html" class="u-active-palette-2-base u-border-none u-btn u-btn-round u-btn-submit u-button-style u-hover-palette-1-dark-1 u-palette-4-dark-1 u-radius-25 u-btn-1">LOG IN</a>
-              <input type="submit" value="submit" class="u-form-control-hidden">
-            </div>
-            <div class="u-form-send-message u-form-send-success">#FormSendSuccess</div>
-            <div class="u-form-send-error u-form-send-message">#FormSendError</div>
-            <input type="hidden" value="" name="recaptchaResponse">
-            <input type="hidden" name="formServices" value="fc14a854f37e4e1f7cb77dfc8caf7afe">
-          </form>
-        </div>
       </div>
     </section>
   

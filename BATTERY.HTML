@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .battery-bar {
+      width: 200px;
+      height: 20px;
+      border: 1px solid #000;
+      background-color: #f1f1f1;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .battery-level {
+      height: 100%;
+      background-color: #4CAF50;
+    }
+
+    .battery-status {
+      color: #000;
+      font-weight: bold;
+      text-align: left;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="battery-bar">
+    <div class="battery-level"></div>
+  </div>
+  <div class="battery-status">
+    Battery Level: <span id="battery-percentage">0%</span>
+  </div>
+
+  <script>
+    navigator.getBattery().then(function(battery) {
+      updateBatteryLevel(battery.level * 100); // Initial update
+
+      battery.addEventListener('levelchange', function() {
+        updateBatteryLevel(battery.level * 100);
+      });
+
+      function updateBatteryLevel(level) {
+        var batteryLevelElement = document.querySelector('.battery-level');
+        var batteryPercentageElement = document.querySelector('#battery-percentage');
+
+        batteryLevelElement.style.width = level + '%';
+        batteryPercentageElement.textContent = level + '%';
+      }
+    });
+  </script>
+</body>
+</html>

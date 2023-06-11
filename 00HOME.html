@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BDBOT HOME PAGE</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-y: scroll;
+      background: #000;
+    }
+
+    #background-video {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+      z-index: -1;
+    }
+
+    .box {
+      position: relative;
+      background-color: rgba(102, 115, 231, 0.8);
+      border-radius: 10px 0 10px 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .box-1 {
+      width: 250px;
+      height: 80px;
+      margin-left: 500px;
+      margin-top: 20px;
+    }
+
+    .box-1-1 {
+      width: 250px;
+      height: 80px;
+      margin-left: 780px;
+      margin-top: -100px;
+    }
+
+    .box-2 {
+      width: 1000px;
+      height: 400px;
+      margin-left: 20px;
+    }
+
+    .box-3 {
+      width: 1000px;
+      height: 500px;
+      margin-left: 20px;
+      background-color: blanchedalmond;
+    }
+
+    .button {
+      text-align: left;
+      margin-bottom: 20px;
+      margin-top: -50px;
+      margin-left: 30px;
+    }
+  </style>
+</head>
+<body>
+  <video id="background-video" autoplay muted loop>
+    <source src="files\21700537.mp4" type="video/mp4">
+  </video>
+
+  <div class="box box-1">
+    <iframe src="BATTERY.HTML"></iframe>
+  </div>
+
+
+  <div class="box box-1-1">
+    <!--<iframe src="claw_button.html"></iframe>-->
+  </div>
+
+  <div class="button">
+    <a href="3-MENU.html" class="u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-4-base u-text-hover-palette-2-base u-btn-1"> ☰</a>
+  </div>
+
+  <div class="box box-2">
+    <p class="u-text u-text-default u-text-white u-text-2">
+        <a class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-2" href=BDBOT_GRENADE_DETECTION.html>VIDEO FEEDBACK</a>
+    </p>
+    <p class="u-text u-text-default u-text-white u-text-2">
+      <a class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-2" href=claw_button.html>OVERRIDE CLAW CONTROL</a>
+  </p>
+    <iframe src="BDBOT_GRENADE_DETECTION.html" style="width: 980px; height: 380px;"></iframe>
+  </div>
+
+  <div class="box box-3">
+    <iframe src="DATABASE WITH FIREBASE.html" style="width: 980px; height: 480px;"></iframe>
+  </div>
+</body>
+</html>

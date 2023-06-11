@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #timer {
+      display: none;
+    }
+  </style>
+
+<style>
+  /* Centering the buttons */
+  #toggleButton,
+  #checkbox {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  /* Styling the table */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  /* Adding boxes around the table */
+  .table-box {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+
+  /* Centering the table within the box */
+  .table-box table {
+    margin: 0 auto;
+  }
+
+  /* Centering the checkbox label */
+  #radioButton {
+    text-align: center;
+  }
+</style>
+
+
+</head>
+<body>
+
+  
+  <div>
+    <p class="u-text u-text-default u-text-white u-text-2">
+        <a class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-2" href=GRAPH.html>VIEW GRAPH</a>
+    </p>
+  </div>
+  <button id="toggleButton" onclick="toggleTimer()">START</button>
+  <div class="table-box">
+    <div id="timer">
+      START TIME: <span id="startTime"></span><br>
+      END TIME: <span id="endTime"></span><br>
+      RUNTIME: <span id="runtime"></span>
+    </div>
+    <div id="radioButton" style="display: none;">
+      <input type="checkbox" id="checkbox" onclick="handleCheckboxClick()">
+      <label for="checkbox">GRENADE DETECTED?</label>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>START TIME</th>
+          <th>END TIME</th>
+          <th>RUNTIME</th>
+          <th>DETECTION STATUS</th>
+        </tr>
+      </thead>
+      <tbody id="dataTable"></tbody>
+    </table>
+  </div>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-database.js"></script>
+
+  <script>
+    var firebaseConfig = {
+        apiKey: "AIzaSyAayMyBCgF6vj_sXhpAB1ViLuxvVFF3CN4",
+        authDomain: "timer-project-307c6.firebaseapp.com",
+        databaseURL: "https://timer-project-307c6-default-rtdb.firebaseio.com/",
+        projectId: "timer-project-307c6",
+        storageBucket: "timer-project-307c6.appspot.com",
+        messagingSenderId: "874966284571",
+        appId: "1:874966284571:web:470acadfc5545525513bbe",
+        //measurementId: "G-KRBCV2K4CX"       
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    var database = firebase.database();
+
+    var startTimeElement = document.getElementById("startTime");
+    var endTimeElement = document.getElementById("endTime");
+    var runtimeElement = document.getElementById("runtime");
+    var checkboxElement = document.getElementById("checkbox");
+
+    var isTimerRunning = false;
+    var startTimestamp;
+    var intervalId;
+
+    function toggleTimer() {
+      var toggleButton = document.getElementById("toggleButton");
+      var timerDiv = document.getElementById("timer");
+      var radioButtonDiv = document.getElementById("radioButton");
+
+      if (!isTimerRunning) {
+        // Start the timer
+        isTimerRunning = true;
+        toggleButton.innerHTML = "Stop";
+        timerDiv.style.display = "block";
+        radioButtonDiv.style.display = "block";
+
+        startTimeElement.innerHTML = new Date().toLocaleString();
+        endTimeElement.innerHTML = "";
+        runtimeElement.innerHTML = "00:00:00";
+
+        startTimestamp = Date.now();
+
+        intervalId = setInterval(updateRuntime, 1000);
+      } else {
+        // Stop the timer
+        isTimerRunning = false;
+        toggleButton.innerHTML = "Toggle";
+        timerDiv.style.display = "none";
+        radioButtonDiv.style.display = "none";
+
+        clearInterval(intervalId);
+
+        endTimeElement.innerHTML = new Date().toLocaleString();
+
+        // Save data to Firebase
+        var runtime = runtimeElement.innerHTML;
+        var isCheckboxChecked = checkboxElement.checked;
+
+        var newEntryRef = database.ref("entries").push();
+        newEntryRef.set({
+          startTime: startTimeElement.innerHTML,
+          endTime: endTimeElement.innerHTML,
+          runtime: runtime,
+          isCheckboxChecked: isCheckboxChecked,
+        })
+        .then(function() {
+          console.log("Data saved successfully!");
+        })
+        .catch(function(error) {
+          console.error("Error saving data:", error);
+        });
+      }
+    }
+
+    function updateRuntime() {
+      var currentTimestamp = Date.now();
+      var runtime = calculateRuntime(startTimestamp, currentTimestamp);
+      runtimeElement.innerHTML = runtime;
+    }
+
+    function calculateRuntime(startTimestamp, endTimestamp) {
+      var runtime = endTimestamp - startTimestamp;
+
+      var hours = Math.floor(runtime / (1000 * 60 * 60));
+      var minutes = Math.floor((runtime % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((runtime % (1000 * 60)) / 1000);
+
+      return padZero(hours) + ":" + padZero(minutes) + ":" + padZero(seconds);
+    }
+
+    function padZero(value) {
+      return value.toString().padStart(2, "0");
+    }
+
+    function handleCheckboxClick() {
+      var isCheckboxChecked = checkboxElement.checked;
+      console.log("Checkbox checked:", isCheckboxChecked);
+    }
+
+    database.ref("entries").on("child_added", function(snapshot) {
+      var entry = snapshot.val();
+
+      var table = document.getElementById("dataTable");
+      var row = table.insertRow(-1);
+
+      var startTimeCell = row.insertCell(0);
+      startTimeCell.innerHTML = entry.startTime;
+
+      var endTimeCell = row.insertCell(1);
+      endTimeCell.innerHTML = entry.endTime;
+
+      var runtimeCell = row.insertCell(2);
+      runtimeCell.innerHTML = entry.runtime;
+
+      var checkboxCheckedCell = row.insertCell(3);
+      checkboxCheckedCell.innerHTML = entry.isCheckboxChecked ? "Detected" : "Not Detected";
+    });
+  </script>
+</body>
+</html>
