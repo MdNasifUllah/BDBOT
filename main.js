@@ -23,7 +23,7 @@ $(function () {
             });
         });
 
-        var publishable_key = "rf_G3YrhGdkZCMnDEidM9K9U0rjuS53";
+        //var publishable_key = "rf_G3YrhGdkZCMnDEidM9K9U0rjuS53";
         var toLoad = {
         model: "bdbot_grenade_detection",
         version: 1
