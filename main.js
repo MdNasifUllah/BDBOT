@@ -23,9 +23,9 @@ $(function () {
             });
         });
 
-    var publishable_key = "rf_nYuk7RGcI9bojsd8wbQHZN4OjOC3";
-    var toLoad = {
-        model: "bdbot_launch_new",
+        var publishable_key = "rf_G3YrhGdkZCMnDEidM9K9U0rjuS53";
+        var toLoad = {
+        model: "bdbot_grenade_detection",
         version: 1
     };
 

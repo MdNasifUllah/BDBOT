@@ -5,17 +5,30 @@
     #timer {
       display: none;
     }
+
+    /* Styling for the button */
+    #toggleButton {
+      display: block;
+      margin: 0 auto;
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* Styling for the button colors */
+    .start-button {
+      background-color: green;
+      color: white;
+    }
+
+    .stop-button {
+      background-color: red;
+      color: white;
+    }
   </style>
 
 <style>
-  /* Centering the buttons */
-  #toggleButton,
-  #checkbox {
-    display: block;
-    margin: 0 auto;
-    text-align: center;
-  }
-
   /* Styling the table */
   table {
     border-collapse: collapse;
@@ -56,13 +69,13 @@
 </head>
 <body>
 
-  
+
   <div>
     <p class="u-text u-text-default u-text-white u-text-2">
         <a class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-2" href=GRAPH.html>VIEW GRAPH</a>
     </p>
   </div>
-  <button id="toggleButton" onclick="toggleTimer()">START</button>
+  <button id="toggleButton" class="start-button" onclick="toggleTimer()">START SEARCH</button>
   <div class="table-box">
     <div id="timer">
       START TIME: <span id="startTime"></span><br>
@@ -85,7 +98,7 @@
       <tbody id="dataTable"></tbody>
     </table>
   </div>
-  
+
   <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-database.js"></script>
 
@@ -98,7 +111,7 @@
         storageBucket: "timer-project-307c6.appspot.com",
         messagingSenderId: "874966284571",
         appId: "1:874966284571:web:470acadfc5545525513bbe",
-        //measurementId: "G-KRBCV2K4CX"       
+        //measurementId: "G-KRBCV2K4CX"     
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -121,7 +134,9 @@
       if (!isTimerRunning) {
         // Start the timer
         isTimerRunning = true;
-        toggleButton.innerHTML = "Stop";
+        toggleButton.innerHTML = "STOP SEARCH";
+        toggleButton.classList.remove("start-button");
+        toggleButton.classList.add("stop-button");
         timerDiv.style.display = "block";
         radioButtonDiv.style.display = "block";
 
@@ -135,7 +150,9 @@
       } else {
         // Stop the timer
         isTimerRunning = false;
-        toggleButton.innerHTML = "Toggle";
+        toggleButton.innerHTML = "START SEARCH";
+        toggleButton.classList.remove("stop-button");
+        toggleButton.classList.add("start-button");
         timerDiv.style.display = "none";
         radioButtonDiv.style.display = "none";
 

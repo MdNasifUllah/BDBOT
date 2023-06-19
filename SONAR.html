@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SONAR</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+    var webSocket;
+    var countdownTimer;
+
+    function connectWebSocket() {
+      webSocket = new WebSocket('ws://192.168.157.149:81/');
+
+      webSocket.onopen = function(event) {
+        console.log('WebSocket connected');
+      }
+
+      webSocket.onmessage = function(event) {
+        var message = event.data;
+        startCountdown();
+        showNotification(message);
+      }
+
+      webSocket.onclose = function(event) {
+        console.log('WebSocket disconnected');
+      }
+    }
+
+    function showNotification(message) {
+      startCountdown(); // Start countdown before displaying the pop-up
+      alert(message);
+    }
+
+    function startCountdown() {
+      var seconds = 10;
+      clearInterval(countdownTimer); // Clear previous timer if exists
+      countdownTimer = setInterval(function() {
+        document.getElementById('timer').textContent = seconds;
+        seconds--;
+        if (seconds < 0) {
+          clearInterval(countdownTimer);
+        }
+      }, 1000);
+    }
+
+    $(document).ready(function() {
+      connectWebSocket();
+    });
+  </script>
+</head>
+<body>
+  <p>OBSTACLE? <br>Countdown: <span id="timer">10</span> seconds</p>
+</body>
+</html>

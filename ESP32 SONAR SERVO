@@ -1,0 +1,101 @@
+#include <WiFi.h>
+#include <WebSocketsServer.h>
+#include <Servo.h>
+
+const char* ssid = "OnePlus 8T";
+const char* password = "asdfghjkl";
+const int port = 80;
+const int servoPin = 13;
+const int triggerPin = 12; // Pin connected to the trigger of the ultrasonic sensor
+const int echoPin = 14; // Pin connected to the echo of the ultrasonic sensor
+const unsigned long obstacleDelay = 10000; // Delay in milliseconds
+
+WebSocketsServer webSocket = WebSocketsServer(81);
+Servo servo;
+bool obstacleDetected = false; // Variable to track obstacle detection state
+unsigned long lastObstacleTime = 0; // Variable to store the timestamp of the last obstacle detection
+
+void handleWebSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length) {
+  if (type == WStype_TEXT) {
+    String command = String((char*)payload);
+    if (command == "0") {
+      servo.write(0);
+    } else if (command == "70") {
+      servo.write(70);
+    }
+  }
+}
+
+void setup() {
+  Serial.begin(115200);
+
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Connecting to WiFi...");
+  }
+  Serial.println("WiFi connected");
+
+  // Print the IP address of the ESP32
+  Serial.print("ESP32 IP Address: ");
+  Serial.println(WiFi.localIP());
+
+  servo.attach(servoPin);
+
+  pinMode(triggerPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  webSocket.begin();
+  webSocket.onEvent(handleWebSocketEvent);
+
+  Serial.print("WebSocket server started on port: ");
+  Serial.println(port);
+}
+
+void loop() {
+  webSocket.loop();
+
+  // Check if the obstacle detection delay has passed
+  if (millis() - lastObstacleTime >= obstacleDelay) {
+    // Read distance from the SONAR
+    int distance = getSonarDistance();
+
+    // Check if an obstacle is detected (within 15 cm) and obstacleDetected is false
+    if (distance < 16 && !obstacleDetected) {
+      obstacleDetected = true; // Set obstacleDetected to true
+
+      // Notify connected clients via WebSocket
+      String message = "Obstacle detected at distance: " + String(distance) + " cm";
+      webSocket.broadcastTXT(message);
+
+      lastObstacleTime = millis(); // Update the timestamp of the last obstacle detection
+    }
+  }
+
+  // Reset obstacleDetected after the obstacleDelay has passed
+  if (obstacleDetected && millis() - lastObstacleTime >= obstacleDelay) {
+    obstacleDetected = false;
+  }
+
+  // Add any other logic or control you need to perform in the loop
+}
+
+int getSonarDistance() {
+  // Send a trigger pulse
+  digitalWrite(triggerPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(triggerPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(triggerPin, LOW);
+
+  // Measure the duration of the echo pulse
+  long duration = pulseIn(echoPin, HIGH);
+
+  // Calculate the distance based on the speed of sound
+  // Speed of sound is approximately 343 meters per second or 0.0343 cm per microsecond
+  // Divide the duration by 2 because the sound travels to the obstacle and back
+  // Convert the duration from microseconds to centimeters
+  int distance = duration * 0.0343 / 2;
+
+  return distance;
+}
